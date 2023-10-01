@@ -14,14 +14,16 @@ const OPENAI_TEMPERATURE = 1.0
 
 app.post('/dinosaur', async (req, res) => {
 	console.log(req.body)
-	const { keywords } = req.body
+	const keywords = req.body.map(x => x.toLowerCase())
 	if (!Array.isArray(keywords)) {
 		res.status(400).send('Pass an array of dinosaur\'s favorite food in body')
 	}
 	console.log('Generating dinosaur which likes:', keywords)
 
-	const namePrompt = `Suggest one name for a dinosaur with ${keywords.join(', ')}`
-	const mottoPrompt = 'Also suggest a motto'
+	// const namePrompt = `Suggest one name for a dinosaur based on ${keywords.join(', ')}`
+	// const mottoPrompt = 'Also suggest a motto'
+	const namePrompt = `Wymyśl jedną nazwę dla dinozaura z ${keywords.join(', ')}`
+	const mottoPrompt = 'Zasugeruj także jego slogan'
 
 	const messages = [
 		// { role: 'system', content: systemMessage },
@@ -69,7 +71,7 @@ app.post('/dinosaur', async (req, res) => {
 
 	res.json({
 		// messages,
-		name: normalizeChatResponse(name),
+		name: normalizeChatResponse(name).toUpperCase(),
 		motto: normalizeChatResponse(motto),
 	})
 })
